@@ -5,23 +5,23 @@ import 'jspdf-autotable';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 
-const SalesTotalReport = () => {
-  const [salesDateRange, setSalesDateRange] = useState({ start: '', end: '' });
-  const [totalSales, setTotalSales] = useState(0);
+const TotalRecoveryReport = () => {
+  const [recoveryDateRange, setRecoveryDateRange] = useState({ start: '', end: '' });
+  const [totalRecovery, setTotalRecovery] = useState(0);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
-  const sampleSalesData = [
-    { date: '2024-12-20', total: 10000 },
-    { date: '2024-12-21', total: 15000 },
+  const sampleRecoveryData = [
+    { date: '2024-12-20', recoveryAmount: 5000 },
+    { date: '2024-12-21', recoveryAmount: 3000 },
   ];
 
-  const calculateTotalSales = () => {
-    const filteredSales = sampleSalesData.filter(
-      (sale) =>
-        new Date(sale.date) >= new Date(salesDateRange.start) &&
-        new Date(sale.date) <= new Date(salesDateRange.end)
+  const calculateTotalRecovery = () => {
+    const filteredRecovery = sampleRecoveryData.filter(
+      (recovery) =>
+        new Date(recovery.date) >= new Date(recoveryDateRange.start) &&
+        new Date(recovery.date) <= new Date(recoveryDateRange.end)
     );
-    setTotalSales(filteredSales.reduce((total, sale) => total + sale.total, 0));
+    setTotalRecovery(filteredRecovery.reduce((total, recovery) => total + recovery.recoveryAmount, 0));
   };
 
   const downloadExcel = (data, filename) => {
@@ -61,10 +61,10 @@ const SalesTotalReport = () => {
         <Header toggleSidebar={toggleSidebar} />
         <main className="p-8">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-semibold text-gray-800">Sales Total Report</h1>
+            <h1 className="text-3xl font-semibold text-gray-800">Total Recovery Report</h1>
             <div className="flex space-x-4">
               <button
-                onClick={() => downloadExcel(sampleSalesData, 'Sales Total Report')}
+                onClick={() => downloadExcel(sampleRecoveryData, 'Total Recovery Report')}
                 className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
               >
                 <span className="material-icons mr-2">table_view</span>
@@ -72,8 +72,8 @@ const SalesTotalReport = () => {
               </button>
               <button
                 onClick={() =>
-                  downloadPDF(sampleSalesData, 'Sales Total Report', [
-                    ['Date', 'Total Sales (₨)'],
+                  downloadPDF(sampleRecoveryData, 'Total Recovery Report', [
+                    ['Date', 'Recovery Amount (₨)'],
                   ])
                 }
                 className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
@@ -89,25 +89,25 @@ const SalesTotalReport = () => {
               <input
                 type="date"
                 name="start"
-                value={salesDateRange.start}
-                onChange={(e) => setSalesDateRange({ ...salesDateRange, start: e.target.value })}
+                value={recoveryDateRange.start}
+                onChange={(e) => setRecoveryDateRange({ ...recoveryDateRange, start: e.target.value })}
                 className="p-2 border border-gray-300 rounded"
               />
               <input
                 type="date"
                 name="end"
-                value={salesDateRange.end}
-                onChange={(e) => setSalesDateRange({ ...salesDateRange, end: e.target.value })}
+                value={recoveryDateRange.end}
+                onChange={(e) => setRecoveryDateRange({ ...recoveryDateRange, end: e.target.value })}
                 className="p-2 border border-gray-300 rounded"
               />
               <button
-                onClick={calculateTotalSales}
+                onClick={calculateTotalRecovery}
                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
               >
                 Generate Report
               </button>
             </div>
-            <h3 className="text-lg font-medium text-gray-700">Total Sales: ₨{totalSales}</h3>
+            <h3 className="text-lg font-medium text-gray-700">Total Recovery: ₨{totalRecovery}</h3>
           </div>
 
           <div className="bg-white rounded-lg shadow p-6">
@@ -115,14 +115,14 @@ const SalesTotalReport = () => {
               <thead className="bg-gray-800">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Total Sales (₨)</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Recovery Amount (₨)</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {sampleSalesData.map((sale, index) => (
+                {sampleRecoveryData.map((recovery, index) => (
                   <tr key={index} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 text-sm text-gray-700">{sale.date}</td>
-                    <td className="px-6 py-4 text-sm text-gray-700">{sale.total}</td>
+                    <td className="px-6 py-4 text-sm text-gray-700">{recovery.date}</td>
+                    <td className="px-6 py-4 text-sm text-gray-700">{recovery.recoveryAmount}</td>
                   </tr>
                 ))}
               </tbody>
@@ -134,4 +134,4 @@ const SalesTotalReport = () => {
   );
 };
 
-export default SalesTotalReport;
+export default TotalRecoveryReport;

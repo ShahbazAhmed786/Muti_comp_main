@@ -17,9 +17,26 @@ const InventoryManagement = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [inventory, setInventory] = useState([
-    { id: 1, name: 'Item A', quantity: 10, price: 25.0 },
-    { id: 2, name: 'Item B', quantity: 5, price: 15.0 },
-    { id: 3, name: 'Item C', quantity: 20, price: 10.0 },
+    {
+      id: 1,
+      name: 'Item A',
+      corton: 5,
+      pieces: 50,
+      purchasePrice: 200.0,
+      salePrice: 250.0,
+      supplier: 'Supplier A',
+      purchaseDate: '2024-01-01',
+    },
+    {
+      id: 2,
+      name: 'Item B',
+      corton: 10,
+      pieces: 100,
+      purchasePrice: 150.0,
+      salePrice: 180.0,
+      supplier: 'Supplier B',
+      purchaseDate: '2024-01-05',
+    },
   ]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
@@ -92,8 +109,12 @@ const InventoryManagement = () => {
               <thead className="bg-gray-800 text-white">
                 <tr>
                   <th className="px-6 py-3 text-left">Name</th>
-                  <th className="px-6 py-3 text-left">Quantity</th>
-                  <th className="px-6 py-3 text-left">Price</th>
+                  <th className="px-6 py-3 text-left">Corton</th>
+                  <th className="px-6 py-3 text-left">Pieces</th>
+                  <th className="px-6 py-3 text-left">Purchase Price</th>
+                  <th className="px-6 py-3 text-left">Sale Price</th>
+                  <th className="px-6 py-3 text-left">Supplier</th>
+                  <th className="px-6 py-3 text-left">Purchase Date</th>
                   <th className="px-6 py-3 text-center">Actions</th>
                 </tr>
               </thead>
@@ -102,8 +123,12 @@ const InventoryManagement = () => {
                   filteredInventory.map((item) => (
                     <tr key={item.id}>
                       <td className="px-6 py-4">{item.name}</td>
-                      <td className="px-6 py-4">{item.quantity}</td>
-                      <td className="px-6 py-4">${item.price.toFixed(2)}</td>
+                      <td className="px-6 py-4">{item.corton}</td>
+                      <td className="px-6 py-4">{item.pieces}</td>
+                      <td className="px-6 py-4">Rs {item.purchasePrice.toFixed(2)}</td>
+                      <td className="px-6 py-4">Rs {item.salePrice.toFixed(2)}</td>
+                      <td className="px-6 py-4">{item.supplier}</td>
+                      <td className="px-6 py-4">{item.purchaseDate}</td>
                       <td className="px-6 py-4 text-center">
                         <IconButton color="primary" onClick={() => handleEdit(item)}>
                           <Edit />
@@ -116,7 +141,7 @@ const InventoryManagement = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="4" className="px-6 py-4 text-center text-gray-500">
+                    <td colSpan="8" className="px-6 py-4 text-center text-gray-500">
                       No items found
                     </td>
                   </tr>
@@ -140,22 +165,58 @@ const InventoryManagement = () => {
                 onChange={handleEditChange}
               />
               <TextField
-                label="Quantity"
+                label="Corton"
                 fullWidth
                 margin="normal"
-                name="quantity"
+                name="corton"
                 type="number"
-                value={selectedItem.quantity}
+                value={selectedItem.corton}
                 onChange={handleEditChange}
               />
               <TextField
-                label="Price"
+                label="Pieces"
                 fullWidth
                 margin="normal"
-                name="price"
+                name="pieces"
                 type="number"
-                value={selectedItem.price}
+                value={selectedItem.pieces}
                 onChange={handleEditChange}
+              />
+              <TextField
+                label="Purchase Price"
+                fullWidth
+                margin="normal"
+                name="purchasePrice"
+                type="number"
+                value={selectedItem.purchasePrice}
+                onChange={handleEditChange}
+              />
+              <TextField
+                label="Sale Price"
+                fullWidth
+                margin="normal"
+                name="salePrice"
+                type="number"
+                value={selectedItem.salePrice}
+                onChange={handleEditChange}
+              />
+              <TextField
+                label="Supplier"
+                fullWidth
+                margin="normal"
+                name="supplier"
+                value={selectedItem.supplier}
+                onChange={handleEditChange}
+              />
+              <TextField
+                label="Purchase Date"
+                fullWidth
+                margin="normal"
+                name="purchaseDate"
+                type="date"
+                value={selectedItem.purchaseDate}
+                onChange={handleEditChange}
+                InputLabelProps={{ shrink: true }}
               />
             </DialogContent>
             <DialogActions>

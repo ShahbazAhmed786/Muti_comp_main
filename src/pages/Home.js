@@ -2,6 +2,12 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import Chart from 'react-apexcharts';
+import {
+  AttachMoney,
+  ShoppingCart,
+  People,
+  PeopleAlt,
+} from '@mui/icons-material'; // Import Material Icons
 
 function Home() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -83,23 +89,35 @@ function Home() {
           {/* Error Message */}
           {error && <p className="text-red-600">{error}</p>}
 
-          {/* Statistics Boxes */}
+          {/* Statistics Boxes with Icons */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white shadow rounded-lg p-4">
-              <h3 className="text-lg font-medium">Total Sales</h3>
-              <p className="text-2xl font-bold text-blue-600">{salesData ? salesData.totalSales : 'Loading'}</p>
+            <div className="bg-white shadow rounded-lg p-4 flex items-center">
+              <AttachMoney className="h-8 w-8 text-blue-600 mr-2" />
+              <div>
+                <h3 className="text-lg font-medium">Total Sales</h3>
+                <p className="text-2xl font-bold">{salesData ? salesData.totalSales : 'Loading'}</p>
+              </div>
             </div>
-            <div className="bg-white shadow rounded-lg p-4">
-              <h3 className="text-lg font-medium">Products Sold</h3>
-              <p className="text-2xl font-bold text-green-600">{salesData ? salesData.totalProductsSold : 'Loading'}</p>
+            <div className="bg-white shadow rounded-lg p-4 flex items-center">
+              <ShoppingCart className="h-8 w-8 text-green-600 mr-2" />
+              <div>
+                <h3 className="text-lg font-medium">Products Sold</h3>
+                <p className="text-2xl font-bold">{salesData ? salesData.totalProductsSold : 'Loading'}</p>
+              </div>
             </div>
-            <div className="bg-white shadow rounded-lg p-4">
-              <h3 className="text-lg font-medium">Active Customers</h3>
-              <p className="text-2xl font-bold text-purple-600">{salesData ? salesData.activeCustomers : 'Loading'}</p>
+            <div className="bg-white shadow rounded-lg p-4 flex items-center">
+              <PeopleAlt className="h-8 w-8 text-purple-600 mr-2" />
+              <div>
+                <h3 className="text-lg font-medium">Active Customers</h3>
+                <p className="text-2xl font-bold">{salesData ? salesData.activeCustomers : 'Loading'}</p>
+              </div>
             </div>
-            <div className="bg-white shadow rounded-lg p-4">
-              <h3 className="text-lg font-medium">Revenue</h3>
-              <p className="text-2xl font-bold text-yellow-600">{salesData ? salesData.revenue : 'Loading'}</p>
+            <div className="bg-white shadow rounded-lg p-4 flex items-center">
+              <People className="h-8 w-8 text-yellow-600 mr-2" />
+              <div>
+                <h3 className="text-lg font-medium">Revenue</h3>
+                <p className="text-2xl font-bold">{salesData ? salesData.revenue : 'Loading'}</p>
+              </div>
             </div>
           </div>
 

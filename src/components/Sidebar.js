@@ -69,7 +69,7 @@ const navItems = [
     ],
   },
   {
-    label: 'Shop',
+    label: 'Customers',
     icon: <Store />,
     path: '/shop',
     children: [
@@ -108,6 +108,12 @@ const navItems = [
       { label: 'Inventory Reports', path: '/reporting/inventory' },
       { label: 'Attendance Reports', path: '/reporting/attendance' },
       { label: 'Payment Reports', path: '/reporting/payments' },
+      { label: 'Customer Wise Reports', path: '/reporting/customer' },
+      { label: 'Product Wise Reports', path: '/reporting/product' },
+      { label: 'Salary Reports', path: '/reporting/salary' },
+      { label: 'Saleman Reports', path: '/reporting/salesman' },
+      { label: 'Saleman Product Wise Reports', path: '/reporting/salesman_product-wise' },
+      { label: 'Total Recovery Reports', path: '/reporting/recovery' },
     ],
   },
   {
@@ -166,7 +172,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       >
         {/* Sidebar Header */}
         <div className="p-4 flex items-center justify-between">
-          <span className="text-xl font-semibold text-white">TechCorp</span>
+          <span className="text-xl font-semibold text-white">Global Sales Tech</span>
           {/* <IconButton
             onClick={onClose}
             aria-label="Close Sidebar"

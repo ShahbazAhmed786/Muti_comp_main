@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
-import { Edit, Delete, Search, Visibility } from '@mui/icons-material';
+import { Edit, Delete, Search, Visibility, Print } from '@mui/icons-material';
 import {
   TextField,
   Button,
@@ -11,6 +11,7 @@ import {
   DialogTitle,
   InputAdornment,
   IconButton,
+  DialogContentText,
 } from '@mui/material';
 
 const OrderManagement = () => {
@@ -22,7 +23,7 @@ const OrderManagement = () => {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [isViewModalOpen, setViewModalOpen] = useState(false);
 
-  // Dummy data
+  // Dummy data for orders
   const dummyOrders = [
     {
       id: 1,
@@ -33,8 +34,8 @@ const OrderManagement = () => {
       time: '14:30',
       status: 'Delivered',
       items: [
-        { name: 'Phone', quantity: 2, price: 500 },
-        { name: 'Laptop', quantity: 1, price: 1200 },
+        { name: 'Phone', carton: 100, pieces: 2, price: 50000, discount: 10 },
+        { name: 'Laptop', carton: 200, pieces: 1, price: 120000, discount: 5 },
       ],
     },
     {
@@ -46,8 +47,8 @@ const OrderManagement = () => {
       time: '10:00',
       status: 'Pending',
       items: [
-        { name: 'T-Shirt', quantity: 3, price: 20 },
-        { name: 'Jeans', quantity: 2, price: 40 },
+        { name: 'T-Shirt', carton: 50, pieces: 3, price: 2000, discount: 5 },
+        { name: 'Jeans', carton: 120, pieces: 2, price: 4000, discount: 10 },
       ],
     },
     {
@@ -59,22 +60,19 @@ const OrderManagement = () => {
       time: '16:15',
       status: 'Cancelled',
       items: [
-        { name: 'Milk', quantity: 5, price: 3 },
-        { name: 'Bread', quantity: 2, price: 2 },
+        { name: 'Milk', carton: 20, pieces: 5, price: 150, discount: 0 },
+        { name: 'Bread', carton: 30, pieces: 2, price: 100, discount: 5 },
       ],
     },
   ];
 
   useEffect(() => {
-    // Simulating API call with dummy data
     setOrders(dummyOrders);
   }, []);
 
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
 
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
+  const handleSearchChange = (e) => setSearchTerm(e.target.value);
 
   const filteredOrders = orders.filter(
     (order) =>
@@ -83,13 +81,20 @@ const OrderManagement = () => {
   );
 
   const handleEdit = (order) => {
-    setSelectedOrder(order);
+    setSelectedOrder({ ...order });
     setEditModalOpen(true);
   };
 
-  const handleEditChange = (e) => {
+  const handleEditChange = (e, index) => {
     const { name, value } = e.target;
-    setSelectedOrder((prev) => ({ ...prev, [name]: value }));
+
+    if (name.includes('item')) {
+      const updatedItems = [...selectedOrder.items];
+      updatedItems[index][name] = value;
+      setSelectedOrder((prev) => ({ ...prev, items: updatedItems }));
+    } else {
+      setSelectedOrder((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSaveEdit = () => {
@@ -112,6 +117,162 @@ const OrderManagement = () => {
   const handleView = (order) => {
     setSelectedOrder(order);
     setViewModalOpen(true);
+  };
+
+  const handlePrintInvoice = (order) => {
+    const invoiceContent = `
+      <html>
+        <head>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              margin: 0;
+              padding: 0;
+            }
+            .invoice-container {
+              max-width: 800px;
+              margin: 20px auto;
+              padding: 20px;
+              border: 1px solid #ddd;
+              border-radius: 8px;
+              background-color: #f9f9f9;
+            }
+            .header {
+              text-align: center;
+              margin-bottom: 30px;
+            }
+            .header h1 {
+              font-size: 36px;
+              margin: 0;
+            }
+            .header p {
+              font-size: 14px;
+              margin: 5px 0;
+            }
+            .invoice-details {
+              display: flex;
+              justify-content: space-between;
+              margin-bottom: 30px;
+            }
+            .invoice-details .info {
+              width: 45%;
+            }
+            .invoice-details .info p {
+              margin: 5px 0;
+              font-size: 14px;
+            }
+            .invoice-details .info .title {
+              font-weight: bold;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              margin-bottom: 30px;
+            }
+            table th, table td {
+              padding: 8px;
+              border: 1px solid #ddd;
+              text-align: left;
+            }
+            table th {
+              background-color: #f2f2f2;
+              font-weight: bold;
+            }
+            table td {
+              font-size: 14px;
+            }
+            .total {
+              text-align: right;
+              font-size: 16px;
+              font-weight: bold;
+            }
+            .footer {
+              text-align: center;
+              font-size: 12px;
+              margin-top: 30px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="invoice-container">
+            <div class="header">
+              <h1>Invoice</h1>
+              <p><strong>Company Name</strong></p>
+              <p>123 Business Street, City, Country</p>
+              <p>Email: info@company.com | Phone: (123) 456-7890</p>
+            </div>
+  
+            <div class="invoice-details">
+              <div class="info">
+                <p class="title">Shop:</p>
+                <p>${order.shop}</p>
+                <p class="title">Salesman:</p>
+                <p>${order.salesman}</p>
+                <p class="title">Sector:</p>
+                <p>${order.sector}</p>
+              </div>
+  
+              <div class="info">
+                <p class="title">Invoice Date:</p>
+                <p>${order.date}</p>
+                <p class="title">Time:</p>
+                <p>${order.time}</p>
+                <p class="title">Status:</p>
+                <p>${order.status}</p>
+              </div>
+            </div>
+  
+            <table>
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Cotton</th>
+                  <th>Pieces</th>
+                  <th>Price (₨)</th>
+                  <th>Discount (%)</th>
+                  <th>Total (₨)</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${order.items
+                  .map(
+                    (item) =>
+                      `<tr>
+                        <td>${item.name}</td>
+                        <td>${item.cotton}</td>
+                        <td>${item.pieces}</td>
+                        <td>${item.price.toLocaleString()}</td>
+                        <td>${item.discount}</td>
+                        <td>${(
+                          item.price * item.pieces * (1 - item.discount / 100)
+                        ).toLocaleString()}</td>
+                      </tr>`
+                  )
+                  .join('')}
+              </tbody>
+            </table>
+  
+            <div class="total">
+              <p>Total: ${order.items.reduce(
+                (total, item) =>
+                  total +
+                  item.price * item.pieces * (1 - item.discount / 100),
+                0
+              ).toLocaleString()}</p>
+            </div>
+  
+            <div class="footer">
+              <p>Thank you for doing business with us!</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+  
+    const printWindow = window.open('', '', 'width=600,height=800');
+    printWindow.document.write(invoiceContent);
+    printWindow.document.close();
+    printWindow.print();
   };
 
   return (
@@ -170,6 +331,9 @@ const OrderManagement = () => {
                         <IconButton color="error" onClick={() => handleDelete(order)}>
                           <Delete />
                         </IconButton>
+                        <IconButton color="default" onClick={() => handlePrintInvoice(order)}>
+                          <Print />
+                        </IconButton>
                       </td>
                     </tr>
                   ))
@@ -184,29 +348,7 @@ const OrderManagement = () => {
             </table>
           </div>
         </main>
-        {/* Modals */}
-        {/* View Modal */}
-        {isViewModalOpen && selectedOrder && (
-          <Dialog open={isViewModalOpen} onClose={() => setViewModalOpen(false)}>
-            <DialogTitle>Order Details</DialogTitle>
-            <DialogContent>
-              <p><strong>Shop:</strong> {selectedOrder.shop}</p>
-              <p><strong>Salesman:</strong> {selectedOrder.salesman}</p>
-              <p><strong>Sector:</strong> {selectedOrder.sector}</p>
-              <p><strong>Date:</strong> {selectedOrder.date}</p>
-              <p><strong>Time:</strong> {selectedOrder.time}</p>
-              <p><strong>Status:</strong> {selectedOrder.status}</p>
-              <ul>
-                {selectedOrder.items.map((item, index) => (
-                  <li key={index}>{item.name} - {item.quantity} x ${item.price}</li>
-                ))}
-              </ul>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={() => setViewModalOpen(false)}>Close</Button>
-            </DialogActions>
-          </Dialog>
-        )}
+
         {/* Edit Modal */}
         {isEditModalOpen && selectedOrder && (
           <Dialog open={isEditModalOpen} onClose={() => setEditModalOpen(false)}>
@@ -214,40 +356,167 @@ const OrderManagement = () => {
             <DialogContent>
               <TextField
                 label="Shop"
-                fullWidth
-                margin="normal"
                 name="shop"
                 value={selectedOrder.shop}
                 onChange={handleEditChange}
+                fullWidth
+                margin="normal"
               />
               <TextField
                 label="Salesman"
-                fullWidth
-                margin="normal"
                 name="salesman"
                 value={selectedOrder.salesman}
                 onChange={handleEditChange}
+                fullWidth
+                margin="normal"
               />
-              {/* Add fields for other properties as needed */}
+              <TextField
+                label="Sector"
+                name="sector"
+                value={selectedOrder.sector}
+                onChange={handleEditChange}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Date"
+                name="date"
+                type="date"
+                value={selectedOrder.date}
+                onChange={handleEditChange}
+                fullWidth
+                margin="normal"
+                InputLabelProps={{ shrink: true }}
+              />
+              <TextField
+                label="Time"
+                name="time"
+                type="time"
+                value={selectedOrder.time}
+                onChange={handleEditChange}
+                fullWidth
+                margin="normal"
+                InputLabelProps={{ shrink: true }}
+              />
+              <TextField
+                label="Status"
+                name="status"
+                value={selectedOrder.status}
+                onChange={handleEditChange}
+                fullWidth
+                margin="normal"
+              />
+
+              <h3 className="mt-4">Items</h3>
+              {selectedOrder.items.map((item, index) => (
+                <div key={index} className="flex space-x-4 mb-4">
+                  <TextField
+                    label="Item Name"
+                    name={`item${index}-name`}
+                    value={item.name}
+                    onChange={(e) => handleEditChange(e, index)}
+                    fullWidth
+                    margin="normal"
+                  />
+                  <TextField
+                    label="Cotton"
+                    name={`item${index}-cotton`}
+                    value={item.carton}
+                    onChange={(e) => handleEditChange(e, index)}
+                    fullWidth
+                    margin="normal"
+                    type="number"
+                  />
+                  <TextField
+                    label="Pieces"
+                    name={`item${index}-pieces`}
+                    value={item.pieces}
+                    onChange={(e) => handleEditChange(e, index)}
+                    fullWidth
+                    margin="normal"
+                    type="number"
+                  />
+                  <TextField
+                    label="Price (₨)"
+                    name={`item${index}-price`}
+                    value={item.price}
+                    onChange={(e) => handleEditChange(e, index)}
+                    fullWidth
+                    margin="normal"
+                    type="number"
+                  />
+                  <TextField
+                    label="Discount (%)"
+                    name={`item${index}-discount`}
+                    value={item.discount}
+                    onChange={(e) => handleEditChange(e, index)}
+                    fullWidth
+                    margin="normal"
+                    type="number"
+                  />
+                </div>
+              ))}
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleSaveEdit}>Save</Button>
-              <Button onClick={() => setEditModalOpen(false)}>Cancel</Button>
+              <Button onClick={() => setEditModalOpen(false)} color="default">
+                Cancel
+              </Button>
+              <Button onClick={handleSaveEdit} color="primary">
+                Save
+              </Button>
             </DialogActions>
           </Dialog>
         )}
-        {/* Delete Modal */}
+
+        {/* Delete Confirmation Modal */}
         {isDeleteModalOpen && selectedOrder && (
           <Dialog open={isDeleteModalOpen} onClose={() => setDeleteModalOpen(false)}>
-            <DialogTitle>Delete Order</DialogTitle>
+            <DialogTitle>Confirm Deletion</DialogTitle>
             <DialogContent>
-              <p>Are you sure you want to delete this order?</p>
+              <DialogContentText>
+                Are you sure you want to delete the order for {selectedOrder.shop}?
+              </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={confirmDelete} color="error">
+              <Button onClick={() => setDeleteModalOpen(false)} color="default">
+                Cancel
+              </Button>
+              <Button onClick={confirmDelete} color="secondary">
                 Delete
               </Button>
-              <Button onClick={() => setDeleteModalOpen(false)}>Cancel</Button>
+            </DialogActions>
+          </Dialog>
+        )}
+
+        {/* View Order Modal */}
+        {isViewModalOpen && selectedOrder && (
+          <Dialog open={isViewModalOpen} onClose={() => setViewModalOpen(false)}>
+            <DialogTitle>Order Details</DialogTitle>
+            <DialogContent>
+              <div className="space-y-4">
+                <p><strong>Shop:</strong> {selectedOrder.shop}</p>
+                <p><strong>Salesman:</strong> {selectedOrder.salesman}</p>
+                <p><strong>Sector:</strong> {selectedOrder.sector}</p>
+                <p><strong>Date:</strong> {selectedOrder.date}</p>
+                <p><strong>Time:</strong> {selectedOrder.time}</p>
+                <p><strong>Status:</strong> {selectedOrder.status}</p>
+
+                <h3 className="mt-4">Items</h3>
+                {selectedOrder.items.map((item, index) => (
+                  <div key={index}>
+                    <p><strong>Item:</strong> {item.name}</p>
+                    <p><strong>Carton:</strong> {item.carton}</p>
+                    <p><strong>Pieces:</strong> {item.pieces}</p>
+                    <p><strong>Price (₨):</strong> {item.price}</p>
+                    <p><strong>Discount (%):</strong> {item.discount}</p>
+                  </div>
+                ))}
+              </div>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setViewModalOpen(false)} color="default">
+                Close
+              </Button>
             </DialogActions>
           </Dialog>
         )}

@@ -24,15 +24,15 @@ const ShopManagement = () => {
 
   // Dummy data for shops
   const [shops, setShops] = useState([
-    { id: 1, name: 'Shop A', address: '123 Main St', contact: '123-456-7890', balance: 500.0 },
-    { id: 2, name: 'Shop B', address: '456 Elm St', contact: '987-654-3210', balance: 750.0 },
-    { id: 3, name: 'Shop C', address: '789 Oak St', contact: '555-555-5555', balance: 1200.0 },
+    { id: 1, name: 'Shop A', owner: 'Owner A', cnic: '12345-6789012-3', address: '123 Main St', cellNo: '123-456-7890', ntn: '1234567', filer: true },
+    { id: 2, name: 'Shop B', owner: 'Owner B', cnic: '98765-4321098-7', address: '456 Elm St', cellNo: '987-654-3210', ntn: '7654321', filer: false },
+    { id: 3, name: 'Shop C', owner: 'Owner C', cnic: '55555-5555555-5', address: '789 Oak St', cellNo: '555-555-5555', ntn: '5555555', filer: true },
   ]);
 
   const [selectedShop, setSelectedShop] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [formState, setFormState] = useState({ name: '', address: '', contact: '', balance: '' });
+  const [formState, setFormState] = useState({ name: '', owner: '', cnic: '', address: '', cellNo: '', ntn: '', filer: false });
 
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
   const closeSidebar = () => setSidebarOpen(false);
@@ -50,7 +50,7 @@ const ShopManagement = () => {
 
   const handleAddShop = () => {
     setSelectedShop(null);
-    setFormState({ name: '', address: '', contact: '', balance: '' });
+    setFormState({ name: '', owner: '', cnic: '', address: '', cellNo: '', ntn: '', filer: false });
     setModalOpen(true);
   };
 
@@ -70,7 +70,7 @@ const ShopManagement = () => {
   };
 
   const saveShop = () => {
-    if (!formState.name || !formState.address || !formState.contact || formState.balance === '') {
+    if (!formState.name || !formState.owner || !formState.cnic || !formState.address || !formState.cellNo || !formState.ntn) {
       alert('Please fill in all fields.');
       return;
     }
@@ -103,13 +103,16 @@ const ShopManagement = () => {
     const doc = new jsPDF();
     doc.text('Shop Records', 20, 10);
     doc.autoTable({
-      head: [['ID', 'Name', 'Address', 'Contact', 'Balance']],
+      head: [['ID', 'Name', 'Owner', 'CNIC', 'Address', 'Cell No', 'NTN', 'Filer']],
       body: shops.map((shop) => [
         shop.id,
         shop.name,
+        shop.owner,
+        shop.cnic,
         shop.address,
-        shop.contact,
-        `$${shop.balance.toFixed(2)}`,
+        shop.cellNo,
+        shop.ntn,
+        shop.filer ? 'Yes' : 'No',
       ]),
     });
     doc.save('ShopRecords.pdf');
@@ -140,24 +143,15 @@ const ShopManagement = () => {
             <table className="min-w-full border-collapse">
               <thead className="bg-gray-800">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                    ID
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                    Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                    Address
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                    Contact Info
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                    Balance
-                  </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
-                    Actions
-                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">ID</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Name</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Owner</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">CNIC</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Address</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Cell No</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">NTN</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Filer</th>
+                  <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -165,9 +159,12 @@ const ShopManagement = () => {
                   <tr key={shop.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{shop.id}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{shop.name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{shop.owner}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{shop.cnic}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{shop.address}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{shop.contact}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${shop.balance.toFixed(2)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{shop.cellNo}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{shop.ntn}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{shop.filer ? 'Yes' : 'No'}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
                       <Button onClick={() => handleEditShop(shop)} color="secondary" startIcon={<Edit />} className="mr-2">
                         Edit
@@ -198,6 +195,22 @@ const ShopManagement = () => {
                     fullWidth
                   />
                   <TextField
+                    label="Owner"
+                    name="owner"
+                    value={formState.owner}
+                    onChange={handleFormChange}
+                    variant="outlined"
+                    fullWidth
+                  />
+                  <TextField
+                    label="CNIC"
+                    name="cnic"
+                    value={formState.cnic}
+                    onChange={handleFormChange}
+                    variant="outlined"
+                    fullWidth
+                  />
+                  <TextField
                     label="Address"
                     name="address"
                     value={formState.address}
@@ -206,19 +219,28 @@ const ShopManagement = () => {
                     fullWidth
                   />
                   <TextField
-                    label="Contact Info"
-                    name="contact"
-                    value={formState.contact}
+                    label="Cell No"
+                    name="cellNo"
+                    value={formState.cellNo}
                     onChange={handleFormChange}
                     variant="outlined"
                     fullWidth
                   />
                   <TextField
-                    label="Balance"
-                    name="balance"
-                    value={formState.balance}
+                    label="NTN"
+                    name="ntn"
+                    value={formState.ntn}
                     onChange={handleFormChange}
-                    type="number"
+                    variant="outlined"
+                    fullWidth
+                  />
+                  <TextField
+                    label="Filer"
+                    name="filer"
+                    value={formState.filer ? 'Yes' : 'No'}
+                    onChange={(e) =>
+                      setFormState((prev) => ({ ...prev, filer: e.target.value === 'Yes' }))
+                    }
                     variant="outlined"
                     fullWidth
                   />

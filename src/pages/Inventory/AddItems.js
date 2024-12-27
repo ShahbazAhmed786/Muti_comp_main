@@ -14,8 +14,10 @@ const InventoryForm = () => {
   const [formData, setFormData] = useState({
     itemName: '',
     description: '',
-    quantity: '',
-    price: '',
+    carton: '',
+    pieces: '',
+    purchasePrice: '',
+    salePrice: '',
     supplier: '',
     purchaseDate: '',
   });
@@ -30,13 +32,15 @@ const InventoryForm = () => {
     try {
       const response = await axios.post('http://localhost:5000/api/Inventory', formData);
       console.log('Form submitted successfully:', response.data);
-  
+
       // Reset form after successful submission
       setFormData({
         itemName: '',
         description: '',
-        quantity: '',
-        price: '',
+        carton: '',
+        pieces: '',
+        purchasePrice: '',
+        salePrice: '',
         supplier: '',
         purchaseDate: '',
       });
@@ -44,8 +48,6 @@ const InventoryForm = () => {
       console.error('Error submitting form:', error.response || error.message);
     }
   };
-
-
 
   const handleNavigation = (href) => {
     console.log(`Navigating to: ${href}`);
@@ -55,16 +57,14 @@ const InventoryForm = () => {
   return (
     <div className="flex h-full">
       <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} onNavigate={handleNavigation} />
-      
-            {/* Main Content */}
-            <div
-              className={`flex-1 bg-gray-100 transition-transform duration-300 ${
-                isSidebarOpen ? 'lg:ml-64' : ''
-              }`}
-            >
-              <Header toggleSidebar={toggleSidebar} />
 
-        {/* Main Section */}
+      <div
+        className={`flex-1 bg-gray-100 transition-transform duration-300 ${
+          isSidebarOpen ? 'lg:ml-64' : ''
+        }`}
+      >
+        <Header toggleSidebar={toggleSidebar} />
+
         <div className="flex justify-center items-start flex-1 p-6 overflow-y-auto bg-gray-50">
           <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-3xl">
             <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
@@ -103,34 +103,42 @@ const InventoryForm = () => {
                 placeholder="Enter item description"
               />
 
-              {/* Quantity and Price */}
+              {/* Carton and Pieces */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <TextField
-                  label="Quantity"
-                  name="quantity"
+                  label="Carton"
+                  name="carton"
                   variant="outlined"
                   fullWidth
                   type="number"
-                  value={formData.quantity}
+                  value={formData.carton}
                   onChange={handleChange}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <LocalShipping />
-                      </InputAdornment>
-                    ),
-                  }}
-                  placeholder="Enter quantity"
+                  placeholder="Enter number of cartons"
                   required
                 />
                 <TextField
-                  label="Price (Rs)"
-                  name="price"
+                  label="Pieces"
+                  name="pieces"
+                  variant="outlined"
+                  fullWidth
+                  type="number"
+                  value={formData.pieces}
+                  onChange={handleChange}
+                  placeholder="Enter number of pieces"
+                  required
+                />
+              </div>
+
+              {/* Purchase Price and Sale Price */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <TextField
+                  label="Purchase Price (Rs)"
+                  name="purchasePrice"
                   variant="outlined"
                   fullWidth
                   type="number"
                   step="0.01"
-                  value={formData.price}
+                  value={formData.purchasePrice}
                   onChange={handleChange}
                   InputProps={{
                     startAdornment: (
@@ -139,7 +147,19 @@ const InventoryForm = () => {
                       </InputAdornment>
                     ),
                   }}
-                  placeholder="Enter price"
+                  placeholder="Enter purchase price"
+                  required
+                />
+                <TextField
+                  label="Sale Price (Rs)"
+                  name="salePrice"
+                  variant="outlined"
+                  fullWidth
+                  type="number"
+                  step="0.01"
+                  value={formData.salePrice}
+                  onChange={handleChange}
+                  placeholder="Enter sale price"
                   required
                 />
               </div>

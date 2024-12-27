@@ -32,6 +32,13 @@ import OrderMangement from './pages/Order/OrderMangement';
 import AddOrder from './pages/Order/AddOrder';
 import Admin from './pages/Admin';
 import AdminProfile from './pages/AdminProfile';
+import SalaryReport from './pages/Reporting/SalaryReport';
+import SalesmanReport from './pages/Reporting/SalesmanReport';
+import SalesmanProductWiseReport from './pages/Reporting/SalesmanProductWiseReport';
+import CustomerWiseReport from './pages/Reporting/CustomerWiseReport';
+import TotalRecoveryReport from './pages/Reporting/TotalRecoveryReport';
+import ProductWiseReport from './pages/Reporting/ProductWiseReport';
+
 
 const App = () => {
   return (
@@ -55,6 +62,12 @@ const App = () => {
           <Route path="/reporting/inventory" element={<InventoryReports />} />
           <Route path="/reporting/sales" element={<SalesReport />} />
           <Route path="/reporting/payments" element={<PaymentsReport />} />
+          <Route path="/reporting/customer" element={<CustomerWiseReport />} />
+          <Route path="/reporting/salary" element={<SalaryReport />} />
+          <Route path="/reporting/recovery" element={<TotalRecoveryReport />} />
+          <Route path="/reporting/salesman" element={<SalesmanReport />} />
+          <Route path="/reporting/salesman_product-wise" element={<SalesmanProductWiseReport />} />
+          <Route path="/reporting/product" element={<ProductWiseReport />} />
           <Route path="/payment" element={<Payments />} />
           <Route path="/balance-sheet" element={<BalanceSheet />} />
           <Route path="/logs-and-audit" element={<LogsAndAudit />} />

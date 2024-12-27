@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios'; // Import Axios for API calls
+import axios from 'axios';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import {
@@ -22,7 +22,7 @@ const AddOrder = () => {
     date: '',
     time: '',
     status: 'Pending',
-    items: [{ name: '', quantity: '', price: '' }],
+    items: [{ name: '', corton: '', pieces: '', price: '', discount: '' }],
   });
 
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
@@ -42,7 +42,7 @@ const AddOrder = () => {
   const addItem = () => {
     setNewOrder((prev) => ({
       ...prev,
-      items: [...prev.items, { name: '', quantity: '', price: '' }],
+      items: [...prev.items, { name: '', corton: '', pieces: '', price: '', discount: '' }],
     }));
   };
 
@@ -55,12 +55,11 @@ const AddOrder = () => {
 
   const handleSave = async () => {
     try {
-      // Send POST request to the API
       const response = await axios.post('/api/orders', newOrder);
 
-      // Show success message and reset form
       alert('Order saved successfully!');
       console.log('Saved Order:', response.data);
+
       setNewOrder({
         shop: '',
         salesman: '',
@@ -68,7 +67,7 @@ const AddOrder = () => {
         date: '',
         time: '',
         status: 'Pending',
-        items: [{ name: '', quantity: '', price: '' }],
+        items: [{ name: '', corton: '', pieces: '', price: '', discount: '' }],
       });
     } catch (error) {
       console.error('Error saving order:', error);
@@ -167,16 +166,28 @@ const AddOrder = () => {
                     onChange={(e) => handleItemChange(index, 'name', e.target.value)}
                   />
                   <TextField
-                    label="Quantity"
+                    label="Corton"
                     type="number"
-                    value={item.quantity}
-                    onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
+                    value={item.corton}
+                    onChange={(e) => handleItemChange(index, 'corton', e.target.value)}
+                  />
+                  <TextField
+                    label="Pieces"
+                    type="number"
+                    value={item.pieces}
+                    onChange={(e) => handleItemChange(index, 'pieces', e.target.value)}
                   />
                   <TextField
                     label="Price"
                     type="number"
                     value={item.price}
                     onChange={(e) => handleItemChange(index, 'price', e.target.value)}
+                  />
+                  <TextField
+                    label="Discount (%)"
+                    type="number"
+                    value={item.discount}
+                    onChange={(e) => handleItemChange(index, 'discount', e.target.value)}
                   />
                   <IconButton color="error" onClick={() => removeItem(index)}>
                     <Remove />

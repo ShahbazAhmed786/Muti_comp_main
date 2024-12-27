@@ -2,16 +2,19 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
-import { TextField, Button, Paper, Typography, InputAdornment } from '@mui/material';
-import { Add, Edit, Store, LocationOn, Phone, AccountBalance } from '@mui/icons-material';
+import { TextField, Button, Paper, Typography, InputAdornment, MenuItem } from '@mui/material';
+import { Add, Edit, Store, Person, AccountBalance, LocationOn, Phone, Badge } from '@mui/icons-material';
 
 const ShopForm = ({ match }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
+    shopName: '',
+    ownerName: '',
+    cnic: '',
     address: '',
-    contact: '',
-    balance: '',
+    cellNo: '',
+    ntnNo: '',
+    filerStatus: '',
   });
   const [isEditing, setIsEditing] = useState(false);
 
@@ -49,22 +52,30 @@ const ShopForm = ({ match }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.address || !formData.contact || formData.balance === '') {
+    const { shopName, ownerName, cnic, address, cellNo, ntnNo, filerStatus } = formData;
+
+    if (!shopName || !ownerName || !cnic || !address || !cellNo || !ntnNo || !filerStatus) {
       alert('Please fill in all fields.');
       return;
     }
 
-    const shopData = { ...formData };
-
     try {
       if (isEditing) {
-        await axios.put(`/api/shops/${formData.id}`, shopData); // Update existing shop
+        await axios.put(`/api/shops/${formData.id}`, formData); // Update existing shop
         alert('Shop details updated successfully!');
       } else {
-        await axios.post('/api/shops', shopData); // Create new shop
+        await axios.post('/api/shops', formData); // Create new shop
         alert('Shop details submitted successfully!');
       }
-      setFormData({ name: '', address: '', contact: '', balance: '' }); // Reset form
+      setFormData({
+        shopName: '',
+        ownerName: '',
+        cnic: '',
+        address: '',
+        cellNo: '',
+        ntnNo: '',
+        filerStatus: '',
+      }); // Reset form
     } catch (error) {
       console.error('Error submitting form:', error);
       alert('There was an error submitting the form.');
@@ -90,18 +101,54 @@ const ShopForm = ({ match }) => {
           <Paper elevation={3} className="p-6 w-full max-w-md mx-auto">
             <form onSubmit={handleSubmit}>
               <TextField
-                label="Name"
+                label="Shop Name"
                 variant="outlined"
                 fullWidth
                 margin="normal"
-                name="name"
-                value={formData.name}
+                name="shopName"
+                value={formData.shopName}
                 onChange={handleInputChange}
                 placeholder="Enter shop name"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
                       <Store />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+
+              <TextField
+                label="Owner Name"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                name="ownerName"
+                value={formData.ownerName}
+                onChange={handleInputChange}
+                placeholder="Enter owner name"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Person />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+
+              <TextField
+                label="CNIC"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                name="cnic"
+                value={formData.cnic}
+                onChange={handleInputChange}
+                placeholder="Enter CNIC"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Badge />
                     </InputAdornment>
                   ),
                 }}
@@ -115,7 +162,7 @@ const ShopForm = ({ match }) => {
                 name="address"
                 value={formData.address}
                 onChange={handleInputChange}
-                placeholder="Enter shop address"
+                placeholder="Enter address"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -126,14 +173,14 @@ const ShopForm = ({ match }) => {
               />
 
               <TextField
-                label="Contact Info"
+                label="Cell Number"
                 variant="outlined"
                 fullWidth
                 margin="normal"
-                name="contact"
-                value={formData.contact}
+                name="cellNo"
+                value={formData.cellNo}
                 onChange={handleInputChange}
-                placeholder="Enter contact info"
+                placeholder="Enter cell number"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -144,15 +191,14 @@ const ShopForm = ({ match }) => {
               />
 
               <TextField
-                label="Balance"
+                label="NTN Number"
                 variant="outlined"
                 fullWidth
                 margin="normal"
-                name="balance"
-                type="number"
-                value={formData.balance}
+                name="ntnNo"
+                value={formData.ntnNo}
                 onChange={handleInputChange}
-                placeholder="Enter balance amount"
+                placeholder="Enter NTN number"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -161,6 +207,20 @@ const ShopForm = ({ match }) => {
                   ),
                 }}
               />
+
+              <TextField
+                label="Filer/Non-Filer"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                name="filerStatus"
+                select
+                value={formData.filerStatus}
+                onChange={handleInputChange}
+              >
+                <MenuItem value="Filer">Filer</MenuItem>
+                <MenuItem value="Non-Filer">Non-Filer</MenuItem>
+              </TextField>
 
               <Button
                 type="submit"
