@@ -15,9 +15,27 @@ import {
 const SupervisorManagement = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [supervisors, setSupervisors] = useState([
-    { id: 1, name: 'Alice Johnson', email: 'alice@example.com', phone: '123-456-7890' },
-    { id: 2, name: 'Bob Smith', email: 'bob@example.com', phone: '987-654-3210' },
-    { id: 3, name: 'Charlie Brown', email: 'charlie@example.com', phone: '456-789-0123' },
+    {
+      id: 1,
+      name: 'Alice Johnson',
+      email: 'alice@example.com',
+      phone: '123-456-7890',
+      sector: 'Sector A', // Added sector field
+    },
+    {
+      id: 2,
+      name: 'Bob Smith',
+      email: 'bob@example.com',
+      phone: '987-654-3210',
+      sector: 'Sector B', // Added sector field
+    },
+    {
+      id: 3,
+      name: 'Charlie Brown',
+      email: 'charlie@example.com',
+      phone: '456-789-0123',
+      sector: 'Sector C', // Added sector field
+    },
   ]);
   const [selectedSupervisor, setSelectedSupervisor] = useState(null);
   const [isViewModalOpen, setViewModalOpen] = useState(false);
@@ -86,6 +104,9 @@ const SupervisorManagement = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                     Phone
                   </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                    Sector
+                  </th>
                   <th className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
                     Actions
                   </th>
@@ -98,6 +119,7 @@ const SupervisorManagement = () => {
                       <td className="px-6 py-4 text-sm text-gray-700">{supervisor.name}</td>
                       <td className="px-6 py-4 text-sm text-gray-700">{supervisor.email}</td>
                       <td className="px-6 py-4 text-sm text-gray-700">{supervisor.phone}</td>
+                      <td className="px-6 py-4 text-sm text-gray-700">{supervisor.sector}</td>
                       <td className="px-6 py-4 text-center">
                         <div className="flex justify-center space-x-4">
                           <IconButton
@@ -133,7 +155,7 @@ const SupervisorManagement = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="4" className="py-4 text-center text-gray-500">
+                    <td colSpan="5" className="py-4 text-center text-gray-500">
                       No data found
                     </td>
                   </tr>
@@ -157,6 +179,9 @@ const SupervisorManagement = () => {
                 </p>
                 <p>
                   <strong>Phone:</strong> {selectedSupervisor.phone}
+                </p>
+                <p>
+                  <strong>Sector:</strong> {selectedSupervisor.sector}
                 </p>
               </div>
             )}
@@ -199,6 +224,15 @@ const SupervisorManagement = () => {
                   value={selectedSupervisor.phone}
                   onChange={(e) =>
                     setSelectedSupervisor({ ...selectedSupervisor, phone: e.target.value })
+                  }
+                />
+                <TextField
+                  label="Sector"
+                  fullWidth
+                  variant="outlined"
+                  value={selectedSupervisor.sector}
+                  onChange={(e) =>
+                    setSelectedSupervisor({ ...selectedSupervisor, sector: e.target.value })
                   }
                 />
               </form>

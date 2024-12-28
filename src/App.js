@@ -7,7 +7,6 @@ import CreateCompany from './pages/company-management/CreateCompany';
 import ManageCompanies from './pages/company-management/ManageCompanies';
 import AddSector from './pages/Sector/AddSector';
 import ViewSector from './pages/Sector/ViewSector';
-import AssignShops from './pages/Sector/AssignShops';
 import AddSalary from './pages/Salary/AddSalary';
 import ViewSalary from './pages/Salary/ViewSalary';
 import MarkAttendence from './pages/Attendence/MarkAttendence';
@@ -50,7 +49,6 @@ const App = () => {
           <Route path="/company-management/manage" element={<ManageCompanies />} />
           <Route path="/Sector/add" element={<AddSector />} />
           <Route path="/Sector/view" element={<ViewSector />} />
-          <Route path="/sector/assign" element={<AssignShops />} />
           <Route path="/inventory/add" element={<AddItems />} />
           <Route path="/inventory/view" element={<ViewItems />} />
           <Route path="/salary/add" element={<AddSalary />} />

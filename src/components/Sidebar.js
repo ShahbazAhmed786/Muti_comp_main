@@ -65,7 +65,7 @@ const navItems = [
     children: [
       { label: 'Add', path: '/sector/add' },
       { label: 'View', path: '/sector/view' },
-      { label: 'Assign Shops', path: '/sector/assign' },
+      
     ],
   },
   {

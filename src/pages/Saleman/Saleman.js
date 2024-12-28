@@ -11,13 +11,43 @@ import {
   TextField,
   IconButton,
   InputAdornment,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Checkbox,
+  ListItemText,
 } from '@mui/material';
 
 // Dummy Data for Salesmen
 const dummySalesmen = [
-  { id: 1, name: 'John Doe', email: 'john.doe@example.com', phone: '123-456-7890' },
-  { id: 2, name: 'Jane Smith', email: 'jane.smith@example.com', phone: '987-654-3210' },
-  { id: 3, name: 'Bob Johnson', email: 'bob.johnson@example.com', phone: '555-555-5555' },
+  {
+    id: 1,
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+    phone: '123-456-7890',
+    address: '123 Main Street',
+    sector: 'Sector A',
+    assignedShops: ['Shop 101', 'Shop 102'],
+  },
+  {
+    id: 2,
+    name: 'Jane Smith',
+    email: 'jane.smith@example.com',
+    phone: '987-654-3210',
+    address: '456 Elm Street',
+    sector: 'Sector B',
+    assignedShops: ['Shop 103'],
+  },
+  {
+    id: 3,
+    name: 'Bob Johnson',
+    email: 'bob.johnson@example.com',
+    phone: '555-555-5555',
+    address: '789 Oak Avenue',
+    sector: 'Sector C',
+    assignedShops: ['Shop 104', 'Shop 105'],
+  },
 ];
 
 const SalesmanManagement = () => {
@@ -29,11 +59,14 @@ const SalesmanManagement = () => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
 
+  // Dummy data for sectors and shops
+  const dummySectors = ['Sector A', 'Sector B', 'Sector C'];
+  const dummyShops = ['Shop 101', 'Shop 102', 'Shop 103', 'Shop 104', 'Shop 105'];
+
   // Fetch salesmen or use dummy data
   useEffect(() => {
     const fetchSalesmen = async () => {
       try {
-        // Simulate API call delay
         await new Promise((resolve) => setTimeout(resolve, 500));
         setSalesmen(dummySalesmen); // Use dummy data
       } catch (error) {
@@ -58,9 +91,10 @@ const SalesmanManagement = () => {
     setDeleteModalOpen(false);
   };
 
-  const filteredSalesmen = salesmen.filter((salesman) =>
-    salesman.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    salesman.email.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredSalesmen = salesmen.filter(
+    (salesman) =>
+      salesman.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      salesman.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -166,6 +200,9 @@ const SalesmanManagement = () => {
                 <p><strong>Name:</strong> {selectedSalesman.name}</p>
                 <p><strong>Email:</strong> {selectedSalesman.email}</p>
                 <p><strong>Phone:</strong> {selectedSalesman.phone}</p>
+                <p><strong>Address:</strong> {selectedSalesman.address}</p>
+                <p><strong>Sector:</strong> {selectedSalesman.sector}</p>
+                <p><strong>Assigned Shops:</strong> {selectedSalesman.assignedShops.join(', ')}</p>
               </div>
             )}
           </DialogContent>
@@ -209,6 +246,53 @@ const SalesmanManagement = () => {
                     setSelectedSalesman({ ...selectedSalesman, phone: e.target.value })
                   }
                 />
+                <TextField
+                  label="Address"
+                  fullWidth
+                  variant="outlined"
+                  value={selectedSalesman.address}
+                  onChange={(e) =>
+                    setSelectedSalesman({ ...selectedSalesman, address: e.target.value })
+                  }
+                />
+                <FormControl fullWidth>
+                  <InputLabel>Sector</InputLabel>
+                  <Select
+                    value={selectedSalesman.sector}
+                    onChange={(e) =>
+                      setSelectedSalesman({ ...selectedSalesman, sector: e.target.value })
+                    }
+                  >
+                    {dummySectors.map((sector) => (
+                      <MenuItem key={sector} value={sector}>
+                        {sector}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl fullWidth>
+                  <InputLabel>Assigned Shops</InputLabel>
+                  <Select
+                    multiple
+                    value={selectedSalesman.assignedShops}
+                    onChange={(e) =>
+                      setSelectedSalesman({
+                        ...selectedSalesman,
+                        assignedShops: typeof e.target.value === 'string'
+                          ? e.target.value.split(',')
+                          : e.target.value,
+                      })
+                    }
+                    renderValue={(selected) => selected.join(', ')}
+                  >
+                    {dummyShops.map((shop) => (
+                      <MenuItem key={shop} value={shop}>
+                        <Checkbox checked={selectedSalesman.assignedShops.includes(shop)} />
+                        <ListItemText primary={shop} />
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </form>
             )}
           </DialogContent>

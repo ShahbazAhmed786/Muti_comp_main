@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
-import { TextField, Button, TextareaAutosize, Snackbar, Alert } from '@mui/material';
+import { TextField, Button, TextareaAutosize, Snackbar, Alert, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import { Person, Email, Phone, Home, Event } from '@mui/icons-material';
 
 const AddSupervisorForm = () => {
@@ -13,9 +13,12 @@ const AddSupervisorForm = () => {
     phone: '',
     address: '',
     joiningDate: '',
+    sectors: [],
   });
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState({ open: false, message: '', severity: '' });
+
+  const availableSectors = ['Sector 1', 'Sector 2', 'Sector 3', 'Sector 4']; // Replace with dynamic data if needed
 
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
   const closeSidebar = () => setSidebarOpen(false);
@@ -25,6 +28,10 @@ const AddSupervisorForm = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleSectorChange = (e) => {
+    setFormData({ ...formData, sectors: e.target.value });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -32,7 +39,7 @@ const AddSupervisorForm = () => {
     try {
       const response = await axios.post('/api/supervisors', formData); // Replace with your actual API endpoint
       setNotification({ open: true, message: 'Supervisor added successfully!', severity: 'success' });
-      setFormData({ name: '', email: '', phone: '', address: '', joiningDate: '' });
+      setFormData({ name: '', email: '', phone: '', address: '', joiningDate: '', sectors: [] });
     } catch (error) {
       setNotification({ open: true, message: 'Failed to add supervisor. Please try again.', severity: 'error' });
     } finally {
@@ -134,6 +141,23 @@ const AddSupervisorForm = () => {
                   shrink: true,
                 }}
               />
+              <FormControl fullWidth>
+                <InputLabel id="sector-label">Assign Sector</InputLabel>
+                <Select
+                  labelId="sector-label"
+                  id="sectors"
+                  name="sectors"
+                  multiple
+                  value={formData.sectors}
+                  onChange={handleSectorChange}
+                >
+                  {availableSectors.map((sector) => (
+                    <MenuItem key={sector} value={sector}>
+                      {sector}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <Button
                 type="submit"
                 variant="contained"
