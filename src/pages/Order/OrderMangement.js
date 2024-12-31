@@ -29,7 +29,7 @@ const OrderManagement = () => {
       id: 1,
       shop: 'Shop A',
       salesman: 'John Doe',
-      sector: 'Electronics',
+      sector: 'Main Bazar',
       date: '2024-12-20',
       time: '14:30',
       status: 'Delivered',
@@ -42,7 +42,7 @@ const OrderManagement = () => {
       id: 2,
       shop: 'Shop B',
       salesman: 'Jane Smith',
-      sector: 'Clothing',
+      sector: 'Raja Bazar',
       date: '2024-12-19',
       time: '10:00',
       status: 'Pending',
@@ -55,7 +55,7 @@ const OrderManagement = () => {
       id: 3,
       shop: 'Shop C',
       salesman: 'Mike Johnson',
-      sector: 'Grocery',
+      sector: 'T-Chowk',
       date: '2024-12-18',
       time: '16:15',
       status: 'Cancelled',
@@ -120,153 +120,162 @@ const OrderManagement = () => {
   };
 
   const handlePrintInvoice = (order) => {
+    const invoiceItems = order.items
+      .map(
+        (item) => `
+        <tr>
+          <td>${item.name}</td>
+          <td>${item.carton}</td>
+          <td>${item.pieces}</td>
+          <td>0</td>
+          <td>0</td>
+          <td>${item.price.toFixed(2)}</td>
+          <td>${item.discount.toFixed(2)}</td>
+          <td>${((item.price * item.discount) / 100).toFixed(2)}</td>
+          <td>0.00</td>
+          <td>${((item.price - (item.price * item.discount) / 100) * item.pieces).toFixed(2)}</td>
+        </tr>`
+      )
+      .join('');
+  
     const invoiceContent = `
-      <html>
-        <head>
-          <style>
-            body {
-              font-family: Arial, sans-serif;
-              margin: 0;
-              padding: 0;
-            }
-            .invoice-container {
-              max-width: 800px;
-              margin: 20px auto;
-              padding: 20px;
-              border: 1px solid #ddd;
-              border-radius: 8px;
-              background-color: #f9f9f9;
-            }
-            .header {
-              text-align: center;
-              margin-bottom: 30px;
-            }
-            .header h1 {
-              font-size: 36px;
-              margin: 0;
-            }
-            .header p {
-              font-size: 14px;
-              margin: 5px 0;
-            }
-            .invoice-details {
-              display: flex;
-              justify-content: space-between;
-              margin-bottom: 30px;
-            }
-            .invoice-details .info {
-              width: 45%;
-            }
-            .invoice-details .info p {
-              margin: 5px 0;
-              font-size: 14px;
-            }
-            .invoice-details .info .title {
-              font-weight: bold;
-            }
-            table {
-              width: 100%;
-              border-collapse: collapse;
-              margin-bottom: 30px;
-            }
-            table th, table td {
-              padding: 8px;
-              border: 1px solid #ddd;
-              text-align: left;
-            }
-            table th {
-              background-color: #f2f2f2;
-              font-weight: bold;
-            }
-            table td {
-              font-size: 14px;
-            }
-            .total {
-              text-align: right;
-              font-size: 16px;
-              font-weight: bold;
-            }
-            .footer {
-              text-align: center;
-              font-size: 12px;
-              margin-top: 30px;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="invoice-container">
-            <div class="header">
-              <h1>Invoice</h1>
-              <p><strong>Company Name</strong></p>
-              <p>123 Business Street, City, Country</p>
-              <p>Email: info@company.com | Phone: (123) 456-7890</p>
-            </div>
+    <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <style>
+       body {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      margin: 0;
+      padding: 0;
+      color: #000;
+    }
+    .invoice-container {
+      width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #000;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .header h1 {
+      font-size: 18px;
+      margin: 0;
+    }
+    .header p {
+      margin: 2px 0;
+    }
+    .details {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .details .section {
+      width: 48%;
+    }
+    .details p {
+      margin: 4px 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    table th, table td {
+      border: 1px solid #000;
+      padding: 5px;
+      text-align: left;
+    }
+    table th {
+      text-align: center;
+      background-color: #f2f2f2;
+    }
+    .flex-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  .totals, .totals2 {
+    width: 48%; /* Adjust width to ensure proper spacing */
+    text-align: left; /* Totals left-aligned */
+  }
+  .totals2 {
+    text-align: right; /* Aligns the text to the right */
+}
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 10px;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="invoice-container">
+      <div class="header">
+        <h1>ZAFAR IQBAL TRADERS</h1>
+        <p>MOHALLA AHMAD NEAR TELEPHONE EXCHANGE HUJRA S</p>
+        <p>PH#: 03006582041 - 03030278228</p>
+        <p>NTN: 4421401-4 | STN: 3277876114049</p>
+      </div>
   
-            <div class="invoice-details">
-              <div class="info">
-                <p class="title">Shop:</p>
-                <p>${order.shop}</p>
-                <p class="title">Salesman:</p>
-                <p>${order.salesman}</p>
-                <p class="title">Sector:</p>
-                <p>${order.sector}</p>
-              </div>
+      <div class="details">
+        <div class="section">
+          <p><strong>Invoice #: </strong>${order.id}</p>
+          <p><strong>Customer: </strong>${order.shop}</p>
+          <p><strong>Salesman: </strong>${order.salesman}</p>
+        </div>
+        <div class="section">
+          <p><strong>Date: </strong>${order.date}</p>
+          <p><strong>Time: </strong>${order.time}</p>
+          <p><strong>Sector/Town: </strong>${order.sector}</p>
+        </div>
+      </div>
   
-              <div class="info">
-                <p class="title">Invoice Date:</p>
-                <p>${order.date}</p>
-                <p class="title">Time:</p>
-                <p>${order.time}</p>
-                <p class="title">Status:</p>
-                <p>${order.status}</p>
-              </div>
-            </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>Carton</th>
+            <th>Qty P</th>
+            <th>Qty L</th>
+            <th>Bins</th>
+            <th>Price</th>
+            <th>Disc%</th>
+            <th>Disc. Val</th>
+            <th>S-Tax%</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${invoiceItems}
+        </tbody>
+      </table>
   
-            <table>
-              <thead>
-                <tr>
-                  <th>Item</th>
-                  <th>Cotton</th>
-                  <th>Pieces</th>
-                  <th>Price (₨)</th>
-                  <th>Discount (%)</th>
-                  <th>Total (₨)</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${order.items
-                  .map(
-                    (item) =>
-                      `<tr>
-                        <td>${item.name}</td>
-                        <td>${item.cotton}</td>
-                        <td>${item.pieces}</td>
-                        <td>${item.price.toLocaleString()}</td>
-                        <td>${item.discount}</td>
-                        <td>${(
-                          item.price * item.pieces * (1 - item.discount / 100)
-                        ).toLocaleString()}</td>
-                      </tr>`
-                  )
-                  .join('')}
-              </tbody>
-            </table>
+      <div class="flex-container">
+        <div class="totals">
+          <p><strong>Total Items: </strong>${order.items.length}</p>
+          <p><strong>Quantity: </strong>P: ${order.items.reduce((sum, item) => sum + item.pieces, 0)}</p>
+          <p><strong>Gross: </strong>${order.items.reduce((sum, item) => sum + item.price * item.pieces, 0).toFixed(2)}</p>
+        </div>
+        <div class="totals2">
+          <p><strong>Invoice Value: </strong>${order.items.reduce((sum, item) => sum + (item.price - (item.price * item.discount) / 100) * item.pieces, 0).toFixed(2)}</p>
+          <p><strong>Prev Balance:</strong> </p>
+          <p><strong>Received:</strong> </p>
+          <p><strong>Balance: </strong>${order.items.reduce((sum, item) => sum + (item.price - (item.price * item.discount) / 100) * item.pieces, 0).toFixed(2)}</p>
+        </div>
+      </div>
   
-            <div class="total">
-              <p>Total: ${order.items.reduce(
-                (total, item) =>
-                  total +
-                  item.price * item.pieces * (1 - item.discount / 100),
-                0
-              ).toLocaleString()}</p>
-            </div>
-  
-            <div class="footer">
-              <p>Thank you for doing business with us!</p>
-            </div>
-          </div>
-        </body>
-      </html>
+      <div class="footer">
+        <p>Powered by Softech Technologies</p>
+      </div>
+    </div>
+  </body>
+  </html>
     `;
   
     const printWindow = window.open('', '', 'width=600,height=800');
@@ -274,7 +283,7 @@ const OrderManagement = () => {
     printWindow.document.close();
     printWindow.print();
   };
-
+  
   return (
     <div className="flex h-full">
       <Sidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />

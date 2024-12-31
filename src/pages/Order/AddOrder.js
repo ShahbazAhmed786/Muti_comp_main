@@ -24,6 +24,12 @@ const AddOrder = () => {
     status: 'Pending',
     items: [{ name: '', corton: '', pieces: '', price: '', discount: '' }],
   });
+  const [stockData, setStockData] = useState([
+    { name: 'Item A', stock: 50 },
+    { name: 'Item B', stock: 30 },
+    { name: 'Item C', stock: 70 },
+    { name: 'Item D', stock: 20 },
+  ]);
 
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
 
@@ -75,16 +81,13 @@ const AddOrder = () => {
     }
   };
 
-  const closeSidebar = () => setSidebarOpen(false);
-
-  const handleNavigation = (href) => {
-    console.log(`Navigating to: ${href}`);
-    closeSidebar();
-  };
+  const filteredStock = stockData.filter((stock) =>
+    newOrder.items.some((item) => item.name && stock.name.toLowerCase().includes(item.name.toLowerCase()))
+  );
 
   return (
-    <div className="flex h-full">
-      <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} onNavigate={handleNavigation} />
+    <div className="flex  h-full">
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div
         className={`flex-1 bg-gray-100 transition-transform duration-300 ${
@@ -93,10 +96,11 @@ const AddOrder = () => {
       >
         <Header toggleSidebar={toggleSidebar} />
 
-        <main className="p-8">
-          <h1 className="text-3xl font-semibold text-gray-800 mb-6">Add New Order</h1>
+        <main className="p-8 flex md:flex-row flex-col">
+          {/* Order Form */}
+          <div className="flex-1 bg-white rounded-lg shadow p-6 mr-4">
+            <h1 className="text-3xl font-semibold text-gray-800 mb-6">Add New Order</h1>
 
-          <div className="bg-white rounded-lg shadow p-6">
             <form>
               <TextField
                 label="Shop"
@@ -221,6 +225,32 @@ const AddOrder = () => {
               </div>
             </form>
           </div>
+
+          {/* Stock Report */}
+          <div className="md:w-1/3 md:mt-0 mt-8 bg-gray-50 rounded-lg shadow p-6">
+  <h2 className="text-2xl font-semibold text-gray-800 mb-4">Stock Report</h2>
+  
+  {/* Table Layout */}
+  <div className="overflow-x-auto">
+    <table className="table-auto w-full text-left border-collapse">
+      <thead>
+        <tr className="border-b border-gray-300">
+          <th className="px-4 py-2 text-sm font-semibold text-gray-600">Product Name</th>
+          <th className="px-3 py-2 text-sm font-semibold text-gray-600">Current Qty</th>
+        </tr>
+      </thead>
+      <tbody>
+        {filteredStock.map((stock, index) => (
+          <tr key={index} className="border-b border-gray-200">
+            <td className="px-4 py-2 text-gray-700">{stock.name}</td>
+            <td className="px-6 py-2 text-gray-700 font-bold">{stock.stock}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
+
         </main>
       </div>
     </div>
